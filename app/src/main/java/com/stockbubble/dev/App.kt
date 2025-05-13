@@ -1,6 +1,7 @@
 package com.stockbubble.dev
 
 import android.app.Application
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.color.DynamicColors
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -39,6 +40,16 @@ open class App : Application() {
   }
 
   protected open fun initLogger() {
-    Timber.plant(Timber.DebugTree())
+    Timber.plant(object : Timber.Tree() {
+      override fun log(
+        priority: Int,
+        tag: String?,
+        message: String,
+        t: Throwable?
+      ) {
+        Log.println(priority, tag, message)
+        t?.printStackTrace()
+      }
+    })
   }
 }

@@ -1,9 +1,11 @@
 package com.stockbubble.dev.network.yahoo
 
+import androidx.annotation.Keep
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+@Keep
 interface YahooFinance {
 
   /**
@@ -13,9 +15,7 @@ interface YahooFinance {
    *
    * @return A List of quotes.
    */
-  @GET(
-    "v7/finance/quote?format=json"
-  )
+  @GET("v7/finance/quote?format=json")
   suspend fun getStocks(@Query(value = "symbols") query: String): Response<YahooResponse>
 }
 

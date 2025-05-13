@@ -283,12 +283,12 @@ private class NotificationFactory(
         val title = context.getString(
             R.string.alert_above_notification_title, quote.symbol,
             appPreferences.selectedDecimalFormat.format(quote.properties!!.alertAbove),
-            appPreferences.selectedDecimalFormat.format(quote.lastTradePrice)
+            appPreferences.selectedDecimalFormat.format(quote.regularMarketPrice)
         )
         val text = context.getString(
             R.string.alert_above_notification, quote.name,
             appPreferences.selectedDecimalFormat.format(quote.properties!!.alertAbove),
-            appPreferences.selectedDecimalFormat.format(quote.lastTradePrice)
+            appPreferences.selectedDecimalFormat.format(quote.regularMarketPrice)
         )
         sendNotification(quote, title, text)
     }
@@ -299,12 +299,12 @@ private class NotificationFactory(
         val title = context.getString(
             R.string.alert_below_notification_title, quote.symbol,
             appPreferences.selectedDecimalFormat.format(quote.properties!!.alertBelow),
-            appPreferences.selectedDecimalFormat.format(quote.lastTradePrice)
+            appPreferences.selectedDecimalFormat.format(quote.regularMarketPrice)
         )
         val text = context.getString(
             R.string.alert_below_notification, quote.name,
             appPreferences.selectedDecimalFormat.format(quote.properties!!.alertBelow),
-            appPreferences.selectedDecimalFormat.format(quote.lastTradePrice)
+            appPreferences.selectedDecimalFormat.format(quote.regularMarketPrice)
         )
         sendNotification(quote, title, text)
     }

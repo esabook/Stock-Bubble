@@ -6,29 +6,7 @@ import kotlinx.serialization.Serializable
 data class QuotePosition(
   var symbol: String = "",
   var holdings: MutableList<Holding> = ArrayList()
-) {
-
-  fun add(holding: Holding) {
-    holdings.add(holding)
-  }
-
-  fun remove(holding: Holding) {
-    holdings.remove(holding)
-  }
-
-  fun averagePrice(): Float {
-    val totalShares = totalShares()
-    if (totalShares == 0f) return 0f
-    val sum = holdings.sumOf {
-      it.totalValue().toDouble()
-    }
-    return sum.div(totalShares).toFloat()
-  }
-
-  fun totalShares(): Float = holdings.sumOf { it.shares.toDouble() }.toFloat()
-
-  fun totalPaidPrice(): Float = holdings.sumOf { it.totalValue().toDouble() }.toFloat()
-}
+)
 
 @Serializable
 data class Holding(

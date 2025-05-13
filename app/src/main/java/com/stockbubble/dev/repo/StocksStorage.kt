@@ -129,42 +129,42 @@ class StocksStorage @Inject constructor(
 
     private fun Quote.toQuoteRow(): QuoteRow {
         return QuoteRow(
-            this.symbol,
-            this.name,
-            this.longName,
-            this.lastTradePrice,
-            this.changeInPercent,
-            this.change,
-            this.stockExchange,
-            this.currencyCode,
-            this.isPostMarket,
-            this.annualDividendRate,
-            this.annualDividendYield,
-            this.dayHigh,
-            this.dayLow,
-            this.previousClose,
-            this.open,
-            this.regularMarketVolume?.toFloat(),
-            this.trailingPE,
-            this.twoHundredDayAverage,
-            this.twoHundredDayAverageChange,
-            this.twoHundredDayAverageChangePercent,
-            this.fiftyDayAverageChangePercent,
-            this.fiftyTwoWeekLowChange,
-            this.fiftyTwoWeekLowChangePercent,
-            this.fiftyTwoWeekHighChange,
-            this.fiftyTwoWeekHighChangePercent,
-            this.fiftyTwoWeekLow,
-            this.fiftyTwoWeekHigh,
-            this.dividendDate?.toFloat(),
-            this.earningsTimestamp?.toFloat(),
-            this.marketCap?.toFloat(),
-            this.tradeable,
-            this.triggerable,
-            this.marketState,
-            this.averageAnalystRating,
-            this.averageDailyVolume3Month,
-            this.averageDailyVolume10Day
+            symbol = this.symbol,
+            name = this.name,
+            longName = this.longName,
+            lastTradePrice = this.regularMarketPrice,
+            changeInPercent = this.changeInPercent,
+            change = this.change,
+            stockExchange = this.stockExchange,
+            currency = this.currencyCode,
+            isPostMarket = this.isPostMarket,
+            annualDividendRate = this.annualDividendRate,
+            annualDividendYield = this.annualDividendYield,
+            dayHigh = this.dayHigh,
+            dayLow = this.dayLow,
+            previousClose = this.previousClose,
+            open = this.open,
+            regularMarketVolume = this.regularMarketVolume?.toFloat(),
+            peRatio = this.trailingPE,
+            twoHundredDayAverage = this.twoHundredDayAverage,
+            twoHundredDayAverageChange = this.twoHundredDayAverageChange,
+            twoHundredDayAverageChangePercent = this.twoHundredDayAverageChangePercent,
+            fiftyDayAverageChangePercent = this.fiftyDayAverageChangePercent,
+            fiftyTwoWeekLowChange = this.fiftyTwoWeekLowChange,
+            fiftyTwoWeekLowChangePercent = this.fiftyTwoWeekLowChangePercent,
+            fiftyTwoWeekHighChange = this.fiftyTwoWeekHighChange,
+            fiftyTwoWeekHighChangePercent = this.fiftyTwoWeekHighChangePercent,
+            fiftyTwoWeekLow = this.fiftyTwoWeekLow,
+            fiftyTwoWeekHigh = this.fiftyTwoWeekHigh,
+            dividendDate = this.dividendDate?.toFloat(),
+            earningsDate = this.earningsTimestamp?.toFloat(),
+            marketCap = this.marketCap?.toFloat(),
+            isTradeable = this.tradeable,
+            isTriggerable = this.triggerable,
+            marketState = this.marketState,
+            averageAnalystRating = this.averageAnalystRating,
+            averageDailyVolume3Month = this.averageDailyVolume3Month,
+            averageDailyVolume10Day = this.averageDailyVolume10Day
         )
     }
 
@@ -182,12 +182,12 @@ class StocksStorage @Inject constructor(
         val quote = Quote(
             symbol = this.symbol,
             name = this.name,
-            lastTradePrice = this.lastTradePrice,
+            regularMarketPrice = this.lastTradePrice,
             changeInPercent = this.changeInPercent,
             change = this.change
         )
         quote.name = this.name
-        quote.lastTradePrice = this.lastTradePrice
+        quote.regularMarketPrice = this.lastTradePrice
         quote.changeInPercent = this.changeInPercent
         quote.change = this.change
         quote.stockExchange = this.stockExchange

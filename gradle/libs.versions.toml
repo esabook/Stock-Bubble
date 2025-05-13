@@ -2,8 +2,9 @@
 agp = "8.9.2"
 converterGson = "2.11.0"
 converterSimplexml = "2.9.0"
+gson = "2.13.1"
 hiltAndroid = "2.51.1"
-jsoup = "1.16.1"
+jsoup = "1.18.3"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -35,6 +36,7 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterSimplexml" }
 converter-simplexml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "converterSimplexml" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }

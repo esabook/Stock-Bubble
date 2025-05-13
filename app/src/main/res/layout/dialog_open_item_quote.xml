@@ -1,116 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardBackgroundColor="?colorSurface"
-    app:cardCornerRadius="@dimen/dp_24"
-    app:cardElevation="0px"
+    android:layout_height="match_parent"
     android:layout_margin="@dimen/dp_12">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/vg_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="@dimen/dp_80"
-            android:layout_height="@dimen/dp_4"
-            app:srcCompat="@color/stroke"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintRight_toRightOf="parent"
-            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"/>
+        android:layout_above="@id/vg_2"
+        android:layout_marginBottom="@dimen/dp_16"
+        app:cardBackgroundColor="?colorSurface"
+        app:cardCornerRadius="@dimen/dp_24"
+        app:cardElevation="0px">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_name"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:textStyle="bold"
-            android:layout_marginLeft="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_24"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="ABCD" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_regular_price"
-            style="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_24"
-            android:layout_marginRight="@dimen/dp_16"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="1234" />
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_regular_market_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="@id/tv_regular_price"
-            app:layout_constraintTop_toBottomOf="@id/tv_regular_price"
-            tools:text="1234" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_4"
-            app:layout_constraintLeft_toRightOf="@id/tv_name"
-            app:layout_constraintTop_toTopOf="@id/tv_name"
-            tools:text="1.5 Buy" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_long_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_name"
-            app:layout_constraintLeft_toLeftOf="@id/tv_name"
-            tools:text="PT Ant Bug Cu" />
-
-        <androidx.constraintlayout.helper.widget.Flow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingVertical="@dimen/dp_24"
-            app:constraint_referenced_ids="icl_idx,icl_google_fin,icl_yahoo_fin,icl_stockbit,icl_ajaib,icl_tradingview"
-            app:flow_wrapMode="chain"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_long_name" />
-
-        <FrameLayout
-            android:id="@+id/line"
+            android:id="@+id/tv_json"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:background="@color/material_on_surface_stroke"
-            android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintTop_toBottomOf="@id/tv_long_name"/>
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true"
+            android:scrollbars="vertical"
+            android:nestedScrollingEnabled="true"
+            android:padding="@dimen/dp_8" />
 
-        <include
-            android:id="@+id/icl_idx"
-            layout="@layout/menu_open_item_quote" />
-        <include
-            android:id="@+id/icl_google_fin"
-            layout="@layout/menu_open_item_quote" />
-        <include
-            android:id="@+id/icl_yahoo_fin"
-            layout="@layout/menu_open_item_quote" />
-        <include
-            android:id="@+id/icl_ajaib"
-            layout="@layout/menu_open_item_quote" />
-        <include
-            android:id="@+id/icl_stockbit"
-            layout="@layout/menu_open_item_quote" />
-        <include
-            android:id="@+id/icl_tradingview"
-            layout="@layout/menu_open_item_quote" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-</com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/vg_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:cardBackgroundColor="?colorSurface"
+        app:cardCornerRadius="@dimen/dp_24"
+        app:cardElevation="0px">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_4"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                app:srcCompat="@color/stroke" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_name"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_24"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="ABCD" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_regular_price"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24"
+                android:layout_marginRight="@dimen/dp_16"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1234" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_regular_market_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dp_10"
+                app:layout_constraintRight_toRightOf="@id/tv_regular_price"
+                app:layout_constraintTop_toBottomOf="@id/tv_regular_price"
+                tools:text="1234" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:textSize="@dimen/dp_10"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="@id/tv_regular_price"
+                app:layout_constraintTop_toBottomOf="@id/tv_regular_market_change"
+                tools:text="1.5 Buy" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_long_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="@id/tv_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"
+                tools:text="PT Ant Bug Cu" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="@dimen/dp_24"
+                app:constraint_referenced_ids="icl_idx,icl_google_fin,icl_yahoo_fin,icl_stockbit,icl_ajaib,icl_tradingview"
+                app:flow_wrapMode="chain"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_long_name" />
+
+            <FrameLayout
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@color/material_on_surface_stroke"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_long_name" />
+
+            <include
+                android:id="@+id/icl_idx"
+                layout="@layout/menu_open_item_quote" />
+
+            <include
+                android:id="@+id/icl_google_fin"
+                layout="@layout/menu_open_item_quote" />
+
+            <include
+                android:id="@+id/icl_yahoo_fin"
+                layout="@layout/menu_open_item_quote" />
+
+            <include
+                android:id="@+id/icl_ajaib"
+                layout="@layout/menu_open_item_quote" />
+
+            <include
+                android:id="@+id/icl_stockbit"
+                layout="@layout/menu_open_item_quote" />
+
+            <include
+                android:id="@+id/icl_tradingview"
+                layout="@layout/menu_open_item_quote" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</RelativeLayout>

@@ -191,7 +191,7 @@ class StocksApi @Inject constructor(
         val quote = Quote(
             symbol = this.symbol.orEmpty(),
             name = (this.shortName ?: this.longName).orEmpty(),
-            lastTradePrice = this.regularMarketPrice.orZero(),
+            regularMarketPrice = this.regularMarketPrice.orZero(),
             changeInPercent = this.regularMarketChangePercent.orZero(),
             change = this.regularMarketChange.orZero()
         )
@@ -228,6 +228,8 @@ class StocksApi @Inject constructor(
         quote.twoHundredDayAverageChangePercent = this.twoHundredDayAverageChangePercent
         quote.marketCap = this.marketCap
         quote.averageAnalystRating = this.averageAnalystRating
+        quote.averageDailyVolume3Month = this.averageDailyVolume3Month
+        quote.averageDailyVolume10Day = this.averageDailyVolume10Day
         return quote
     }
 }

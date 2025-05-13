@@ -9,9 +9,7 @@ import com.stockbubble.dev.createTimeString
 import com.stockbubble.dev.network.api.StocksApi
 import com.stockbubble.dev.network.data.FetchException
 import com.stockbubble.dev.network.data.FetchResult
-import com.stockbubble.dev.network.data.Holding
 import com.stockbubble.dev.network.data.Quote
-import com.stockbubble.dev.network.data.QuotePosition
 import com.stockbubble.dev.repo.StocksStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
@@ -48,11 +46,10 @@ class StocksProvider @Inject constructor(
         private const val LAST_FETCHED = "LAST_FETCHED"
         private const val NEXT_FETCH = "NEXT_FETCH"
         private val DEFAULT_STOCKS = DefaultStock.IDX
-        const val DEFAULT_INTERVAL_MS: Long = 15_000L
     }
 
     private val tickerSet: MutableSet<String> = HashSet()
-    private val quoteMap: MutableMap<String, Quote> = HashMap()
+//    private val quoteMap: MutableMap<String, Quote> = HashMap()
 
     private val _fetchState = MutableStateFlow<FetchState>(FetchState.NotFetched)
     private val _nextFetch = MutableStateFlow<Long>(0)
@@ -89,10 +86,11 @@ class StocksProvider @Inject constructor(
     private suspend fun fetchLocal() = withContext(Dispatchers.IO) {
         try {
             val quotes = storage.readQuotes()
-            synchronized(quoteMap) {
-                quotes.forEach { quoteMap[it.symbol] = it }
-            }
-            _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
+//            synchronized(quoteMap) {
+//                quotes.forEach { quoteMap[it.symbol] = it }
+//            }
+//            _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
+            _portfolio.emit(quotes)
         } catch (e: Exception) {
             Timber.w(e)
         }
@@ -123,47 +121,43 @@ class StocksProvider @Inject constructor(
         appPreferences.setRefreshing(false)
 //    widgetDataProvider.broadcastUpdateAllWidgets()
     }
-
-    private suspend fun fetchStockInternal(
-        ticker: String,
-        allowCache: Boolean
-    ): FetchResult<Quote> =
-        withContext(Dispatchers.IO) {
-            val quote = if (allowCache) quoteMap[ticker] else null
-            return@withContext quote?.let { FetchResult.success(quote) } ?: run {
-                try {
-                    val res = api.getStock(ticker)
-                    if (res.wasSuccessful) {
-                        val data = res.data
-                        val quoteFromStorage = storage.readQuote(ticker)
-                        val quote = quoteFromStorage?.let {
-                            it.copyValues(data)
-                            quoteFromStorage
-                        } ?: data
-                        quoteMap[ticker] = quote
-                        FetchResult.success(quote)
-                    } else {
-                        FetchResult.failure<Quote>(FetchException("Failed to fetch", res.error))
-                    }
-                } catch (ex: CancellationException) {
-                    // ignore
-                    FetchResult.failure<Quote>(FetchException("Failed to fetch", ex))
-                } catch (ex: Exception) {
-                    Timber.w(ex)
-                    FetchResult.failure<Quote>(FetchException("Failed to fetch", ex))
-                }
-            }
-        }
+//
+//    private suspend fun fetchStockInternal(
+//        ticker: String,
+//        allowCache: Boolean
+//    ): FetchResult<Quote> =
+//        withContext(Dispatchers.IO) {
+//            val quote = if (allowCache) quoteMap[ticker] else null
+//            return@withContext quote?.let { FetchResult.success(quote) } ?: run {
+//                try {
+//                    val res = api.getStock(ticker)
+//                    if (res.wasSuccessful) {
+//                        val data = res.data
+//                        val quoteFromStorage = storage.readQuote(ticker)
+//                        val quote = quoteFromStorage?.let {
+//                            it.copyValues(data)
+//                            quoteFromStorage
+//                        } ?: data
+//                        quoteMap[ticker] = quote
+//                        FetchResult.success(quote)
+//                    } else {
+//                        FetchResult.failure<Quote>(FetchException("Failed to fetch", res.error))
+//                    }
+//                } catch (ex: CancellationException) {
+//                    // ignore
+//                    FetchResult.failure<Quote>(FetchException("Failed to fetch", ex))
+//                } catch (ex: Exception) {
+//                    Timber.w(ex)
+//                    FetchResult.failure<Quote>(FetchException("Failed to fetch", ex))
+//                }
+//            }
+//        }
 
     /////////////////////
     // public api
     /////////////////////
 
     fun lastFetchedMs(): Long = preferences.getLong(LAST_FETCHED, 0L)
-
-    fun hasTicker(ticker: String): Boolean {
-        return tickerSet.contains(ticker)
-    }
 
     suspend fun fetch(allowScheduling: Boolean = true): FetchResult<List<Quote>> =
         withContext(Dispatchers.IO) {
@@ -204,8 +198,7 @@ class StocksProvider @Inject constructor(
                             saveLastFetched()
                             scheduleUpdate()
                         }
-                        FetchResult.success(quoteMap.values.filter { tickerSet.contains(it.symbol) }
-                            .toList())
+                        FetchResult.success(fetchedStocks)
                     }
                 } catch (ex: CancellationException) {
                     FetchResult.failure<List<Quote>>(FetchException("Failed to fetch", ex))
@@ -223,143 +216,14 @@ class StocksProvider @Inject constructor(
         alarmScheduler.enqueuePeriodicRefresh()
     }
 
-    fun addStock(ticker: String): Collection<String> {
-        synchronized(quoteMap) {
-            if (!tickerSet.contains(ticker)) {
-                tickerSet.add(ticker)
-                val quote = Quote(symbol = ticker)
-                quoteMap[ticker] = quote
-                saveTickers()
-            }
-        }
-        _tickers.tryEmit(tickerSet.toList())
-        _portfolio.tryEmit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-        coroutineScope.launch {
-            val result = fetchStockInternal(ticker, false)
-            if (result.wasSuccessful) {
-                val data = result.data
-                quoteMap[ticker] = data
-                storage.saveQuote(result.data)
-                _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-            }
-        }
-        return tickerSet
-    }
+//    suspend fun fetchStock(ticker: String, allowCache: Boolean = true): FetchResult<Quote> {
+//        return fetchStockInternal(ticker, allowCache)
+//    }
 
-    fun hasPositions(): Boolean = quoteMap.filter { it.value.hasPositions() }.isNotEmpty()
-
-    fun hasPosition(ticker: String): Boolean = quoteMap[ticker]?.hasPositions() ?: false
-
-    fun getPosition(ticker: String): QuotePosition? = quoteMap[ticker]?.position
-
-    suspend fun addHolding(
-        ticker: String,
-        shares: Float,
-        price: Float
-    ): Holding {
-        val quote: Quote?
-        var position: QuotePosition
-        synchronized(quoteMap) {
-            quote = quoteMap[ticker]
-            position = getPosition(ticker) ?: QuotePosition(ticker)
-            if (!tickerSet.contains(ticker)) {
-                tickerSet.add(ticker)
-            }
-        }
-        _tickers.emit(tickerSet.toList())
-        saveTickers()
-        val holding = Holding(ticker, shares, price)
-        position.add(holding)
-        quote?.position = position
-        val id = storage.addHolding(holding)
-        holding.id = id
-        _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-        return holding
-    }
-
-    suspend fun removePosition(
-        ticker: String,
-        holding: Holding
-    ) {
-        synchronized(quoteMap) {
-            val position = getPosition(ticker)
-            val quote = quoteMap[ticker]
-            position?.remove(holding)
-            quote?.position = position
-        }
-        storage.removeHolding(ticker, holding)
-        _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-    }
-
-    fun addStocks(symbols: Collection<String>): Collection<String> {
-        synchronized(this.tickerSet) {
-            val filterNot = symbols.filterNot { this.tickerSet.contains(it) }
-            filterNot.forEach { this.tickerSet.add(it) }
-            saveTickers()
-            if (filterNot.isNotEmpty()) {
-                coroutineScope.launch {
-                    fetch()
-                }
-            }
-        }
-        _tickers.tryEmit(tickerSet.toList())
-        _portfolio.tryEmit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-        return this.tickerSet
-    }
-
-    suspend fun removeStock(ticker: String): Collection<String> {
-        synchronized(quoteMap) {
-            tickerSet.remove(ticker)
-            saveTickers()
-            quoteMap.remove(ticker)
-        }
-        storage.removeQuoteBySymbol(ticker)
-        _tickers.emit(tickerSet.toList())
-        _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-        return tickerSet
-    }
-
-    suspend fun removeStocks(symbols: Collection<String>) {
-        synchronized(quoteMap) {
-            symbols.forEach {
-                tickerSet.remove(it)
-                quoteMap.remove(it)
-            }
-        }
-        storage.removeQuotesBySymbol(symbols.toList())
-        _tickers.emit(tickerSet.toList())
-        _portfolio.emit(quoteMap.values.filter { tickerSet.contains(it.symbol) }.toList())
-        saveTickers()
-    }
-
-    suspend fun fetchStock(ticker: String, allowCache: Boolean = true): FetchResult<Quote> {
-        return fetchStockInternal(ticker, allowCache)
-    }
-
-    fun getStock(ticker: String): Quote? = quoteMap[ticker]
-
-    val tickers: StateFlow<List<String>>
-        get() = _tickers
+//    fun getStock(ticker: String): Quote? = quoteMap[ticker]
 
     val portfolio: StateFlow<List<Quote>>
         get() = _portfolio//quoteMap.filter { widgetDataProvider.containsTicker(it.key) }.map { it.value }
-
-    fun addPortfolio(portfolio: List<Quote>) {
-        synchronized(quoteMap) {
-            portfolio.forEach {
-                val symbol = it.symbol
-                if (!tickerSet.contains(symbol)) tickerSet.add(symbol)
-                quoteMap[symbol] = it
-            }
-        }
-        saveTickers()
-//    widgetDataProvider.updateWidgets(tickerSet.toList())
-        coroutineScope.launch {
-            storage.saveQuotes(portfolio)
-            fetchLocal()
-            fetch()
-        }
-    }
 
     val fetchState: StateFlow<FetchState>
         get() = _fetchState

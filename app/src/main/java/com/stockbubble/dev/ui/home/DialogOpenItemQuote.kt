@@ -2,22 +2,28 @@ package com.stockbubble.dev.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.gson.GsonBuilder
 import com.stockbubble.dev.R
 import com.stockbubble.dev.databinding.DialogOpenItemQuoteBinding
 import com.stockbubble.dev.network.data.Quote
 import com.stockbubble.dev.ui.home.EmitenViewHolder.Companion.changeTextColor
-import com.stockbubble.dev.ui.home.EmitenViewHolder.Companion.getChangePercentWithSign
 import com.stockbubble.dev.ui.home.EmitenViewHolder.Companion.getColorRating
+import com.stockbubble.dev.ui.home.EmitenViewHolder.Companion.getPercentWithSign
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DialogOpenItemQuote : BottomSheetDialogFragment() {
@@ -43,6 +49,11 @@ class DialogOpenItemQuote : BottomSheetDialogFragment() {
             marginStart = resources.getDimensionPixelSize(R.dimen.dp_16)
             marginEnd = resources.getDimensionPixelSize(R.dimen.dp_16)
         }
+
+        val bottomSheet: FrameLayout =
+            dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+        val behavior = BottomSheetBehavior.from(bottomSheet)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         binding.run {
             iclIdx.tvName.text = "Indonesian Stock Exchange"
@@ -76,8 +87,13 @@ class DialogOpenItemQuote : BottomSheetDialogFragment() {
     }
 
     fun showWithSymbol(fragmentManager: FragmentManager, quote: Quote?) {
+        if (isAdded) return
         this.quote = quote
         super.show(fragmentManager, "DialogOpenItemQuote")
+    }
+
+    private val gson by lazy {
+        GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     }
 
     override fun onResume() {
@@ -89,12 +105,21 @@ class DialogOpenItemQuote : BottomSheetDialogFragment() {
                     tvLongName.text = quote.longName
 
                     tvRegularPrice.text = quote.priceString()
-                    tvRegularMarketChange.text = getChangePercentWithSign(quote.changeInPercent)
+                    tvRegularMarketChange.text = getPercentWithSign(quote.changeInPercent)
                     tvRating.text = quote.averageAnalystRating
 
                     tvRegularPrice.changeTextColor(quote.changeInPercent)
                     tvRegularMarketChange.changeTextColor(quote.changeInPercent)
-                    tvRating.setTextColor(ResourcesCompat.getColor(resources, quote.getColorRating(), null))
+                    tvRating.setTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            quote.getColorRating(),
+                            null
+                        )
+                    )
+
+                    tvJson.movementMethod = ScrollingMovementMethod.getInstance()
+                    tvJson.text = withContext(Dispatchers.IO) { gson.toJson(quote) }
                 }
             }
         }

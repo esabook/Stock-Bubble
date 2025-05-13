@@ -1,7 +1,6 @@
 package com.stockbubble.dev.network.data
 
 import com.stockbubble.dev.component.AppPreference
-import com.stockbubble.dev.orZero
 import kotlinx.serialization.Serializable
 
 /**
@@ -11,7 +10,7 @@ import kotlinx.serialization.Serializable
 data class Quote(
     var symbol: String = "",
     var name: String = "",
-    var lastTradePrice: Float = 0.toFloat(),
+    var regularMarketPrice: Float = 0.toFloat(),
     var changeInPercent: Float = 0.toFloat(),
     var change: Float = 0.toFloat()
 ) : Comparable<Quote> {
@@ -57,39 +56,11 @@ data class Quote(
     var marketCap: Long? = null
     var averageAnalystRating: String? = null
 
-    val priceFormat: QuotePriceFormat
-        get() = currencyCodes[currencyCode]?.let {
-            QuotePriceFormat(
-                currencyCode = currencyCode,
-                symbol = it,
-                prefix = prefixCurrencies[currencyCode] ?: true
-            )
-        } ?: QuotePriceFormat(currencyCode, currencyCode)
-
     fun hasAlertAbove(): Boolean =
-        this.properties != null && this.properties!!.alertAbove > 0.0f && this.properties!!.alertAbove < this.lastTradePrice
+        this.properties != null && this.properties!!.alertAbove > 0.0f && this.properties!!.alertAbove < this.regularMarketPrice
 
     fun hasAlertBelow(): Boolean =
-        this.properties != null && this.properties!!.alertBelow > 0.0f && this.properties!!.alertBelow > this.lastTradePrice
-
-    fun getAlertAbove(): Float = this.properties?.alertAbove ?: 0.0f
-
-    fun getAlertBelow(): Float = this.properties?.alertBelow ?: 0.0f
-
-    fun hasPositions(): Boolean = position?.holdings?.isNotEmpty() ?: false
-
-    fun changeString(): String = AppPreference.SELECTED_DECIMAL_FORMAT.format(change)
-
-    fun changeStringWithSign(): String {
-        val changeString = AppPreference.SELECTED_DECIMAL_FORMAT.format(change)
-        if (change >= 0) {
-            return "+$changeString"
-        }
-        return changeString
-    }
-
-    fun changePercentString(): String =
-        "${AppPreference.DECIMAL_FORMAT_2DP.format(changeInPercent)}%"
+        this.properties != null && this.properties!!.alertBelow > 0.0f && this.properties!!.alertBelow > this.regularMarketPrice
 
     fun changePercentStringWithSign(): String {
         val changeString = "${AppPreference.DECIMAL_FORMAT_2DP.format(changeInPercent)}%"
@@ -99,99 +70,15 @@ data class Quote(
         return changeString
     }
 
-    fun dividendInfo(): String {
-        return if (annualDividendRate <= 0f || annualDividendYield <= 0f) {
-            "--"
-        } else {
-            AppPreference.DECIMAL_FORMAT_2DP.format(annualDividendRate)
-        }
-    }
 
-    private fun positionPrice(): Float = position?.averagePrice() ?: 0f
-
-    private fun totalPositionShares(): Float = position?.totalShares() ?: 0f
-
-    private fun totalPositionPrice(): Float = position?.totalPaidPrice() ?: 0f
-
-    fun priceString(): String = AppPreference.SELECTED_DECIMAL_FORMAT.format(lastTradePrice)
-
-    fun averagePositionPrice(): String =
-        AppPreference.SELECTED_DECIMAL_FORMAT.format(positionPrice())
-
-    fun numSharesString(): String =
-        AppPreference.SELECTED_DECIMAL_FORMAT.format(totalPositionShares())
-
-    fun totalSpentString(): String =
-        AppPreference.SELECTED_DECIMAL_FORMAT.format(totalPositionPrice())
-
-    fun holdings(): Float = lastTradePrice * totalPositionShares()
-
-    fun holdingsString(): String = AppPreference.SELECTED_DECIMAL_FORMAT.format(holdings())
-
-    fun gainLoss(): Float = holdings() - totalPositionShares() * positionPrice()
-
-    fun gainLossString(): String {
-        val gainLoss = gainLoss()
-        val gainLossString = AppPreference.SELECTED_DECIMAL_FORMAT.format(gainLoss)
-        if (gainLoss >= 0) {
-            return "+$gainLossString"
-        }
-        return gainLossString
-    }
-
-    private fun gainLossPercent(): Float {
-        if (totalPositionPrice() == 0f) return 0f
-        return (gainLoss() / totalPositionPrice()) * 100f
-    }
-
-    fun gainLossPercentString(): String {
-        val gainLossPercent = gainLossPercent()
-        val gainLossString = "${AppPreference.DECIMAL_FORMAT_2DP.format(gainLossPercent)}%"
-        if (gainLossPercent >= 0) {
-            return "+$gainLossString"
-        }
-        return gainLossString
-    }
-//
-//    fun dayChange(): Float = totalPositionShares() * change
-//
-//    fun dayChangeString(): String {
-//        val dayChange = dayChange()
-//        val dayChangeString = AppPreference.SELECTED_DECIMAL_FORMAT.format(dayChange)
-//        if (dayChange > 0) {
-//            return "+$dayChangeString"
-//        }
-//        return dayChangeString
-//    }
-
-    fun newsQuery(): String {
-        return "${
-            if (symbol.contains(".")) symbol.substring(
-                0,
-                symbol.indexOf('.')
-            ) else symbol
-        } ${
-            name.split(" ").toMutableList()
-                .apply { removeAll(arrayOf("Inc.", "Corporation", "PLC", "ORD")) }.take(3)
-                .joinToString(" ")
-        } stock"
-    }
-
-    val isMarketOpen: Boolean
-        get() = "REGULAR" == marketState.uppercase()
-
-
-    val dayChange: Double
-        get() = ((lastTradePrice - dayLow.orZero()))
-        .div(dayHigh.orZero() - dayLow.orZero())
-        .times(0.100)
+    fun priceString(): String = AppPreference.SELECTED_DECIMAL_FORMAT.format(regularMarketPrice)
 
     override operator fun compareTo(other: Quote): Int =
         other.changeInPercent.compareTo(changeInPercent)
 
     fun copyValues(data: Quote) {
         this.name = data.name
-        this.lastTradePrice = data.lastTradePrice
+        this.regularMarketPrice = data.regularMarketPrice
         this.changeInPercent = data.changeInPercent
         this.change = data.change
         this.stockExchange = data.stockExchange

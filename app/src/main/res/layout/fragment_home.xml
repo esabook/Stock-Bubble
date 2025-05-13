@@ -10,43 +10,49 @@
         android:id="@+id/progress_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:min="0"
-        android:max="100"
-        android:progress="60"
         android:indeterminate="false"
+        android:max="100"
+        android:min="0"
+        android:progress="60"
+        app:indicatorColor="@color/green"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:trackThickness="@dimen/dp_2"
         tools:ignore="UnusedAttribute" />
 
     <HorizontalScrollView
         android:id="@+id/horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/progress_horizontal">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/icl_header"
-                layout="@layout/item_quote_view_holder_header" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_data"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_marginTop="@dimen/dp_8"
                 android:clipToPadding="false"
                 android:orientation="vertical"
+                android:paddingTop="@dimen/dp_48"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/icl_header"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:itemCount="10"
                 tools:listitem="@layout/item_quote_view_holder" />
+
+
+            <include
+                android:id="@+id/icl_header"
+                layout="@layout/item_quote_view_holder_header" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </HorizontalScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

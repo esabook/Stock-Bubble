@@ -17,6 +17,7 @@ import com.stockbubble.dev.R
 import com.stockbubble.dev.databinding.FragmentHomeBinding
 import com.stockbubble.dev.isNetworkOnline
 import com.stockbubble.dev.network.data.Quote
+import com.stockbubble.dev.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,14 +29,9 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
     private val viewModel: HomeViewModel by viewModels()
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentHomeBinding::inflate)
     private val adapter = EmitenAdapter(onItemClick = ::showOpenQuoteDialog)
-
 
     private val openQuoteDialog by lazy { DialogOpenItemQuote() }
     private fun showOpenQuoteDialog(quote: Quote?) {
@@ -46,11 +42,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
-    }
+    ): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,9 +89,6 @@ class HomeFragment : Fragment() {
         }
 
         binding.rvData.adapter = adapter
-        viewModel.quotes.observe(viewLifecycleOwner) { quotes ->
-            adapter.submitList(quotes)
-        }
 
         viewModel.fetchState.observe(viewLifecycleOwner) {
             binding.progressHorizontal.isIndeterminate = false
@@ -110,6 +99,7 @@ class HomeFragment : Fragment() {
             tvRegularPrice.setOnClickListener(::onHeaderClick)
             tvRegularMarketCap.setOnClickListener(::onHeaderClick)
             tvRegularMarketVolume.setOnClickListener(::onHeaderClick)
+            tvRegularMarketChange.setOnClickListener(::onHeaderClick)
             tv50DayChangePct.setOnClickListener(::onHeaderClick)
             tv52WeekLowChangePct.setOnClickListener(::onHeaderClick)
             tv52WeekHighChangePct.setOnClickListener(::onHeaderClick)
@@ -118,6 +108,11 @@ class HomeFragment : Fragment() {
             tvAvgVolume3Mo.setOnClickListener(::onHeaderClick)
             tvDividendYield.setOnClickListener(::onHeaderClick)
             tvRating.setOnClickListener(::onHeaderClick)
+
+            tvRating.setOnLongClickListener {
+                fetch()
+                true
+            }
         }
     }
 
@@ -126,34 +121,50 @@ class HomeFragment : Fragment() {
     private fun onHeaderClick(v: View) {
         job?.cancel()
         job = lifecycleScope.launch(Dispatchers.IO) {
-            delay(500)
             when (v.id) {
                 R.id.tv_name -> sorting(v.id, Quote::symbol)
-                R.id.tv_regular_price -> sorting(v.id, Quote::lastTradePrice)
+                R.id.tv_regular_price -> sorting(v.id, Quote::regularMarketPrice)
                 R.id.tv_regular_market_cap -> sorting(v.id, Quote::marketCap)
                 R.id.tv_regular_market_volume -> sorting(v.id, Quote::regularMarketVolume)
                 R.id.tv_regular_market_change -> sorting(v.id, Quote::changeInPercent)
                 R.id.tv_50_day_change_pct -> sorting(v.id, Quote::fiftyDayAverageChangePercent)
+                R.id.tv_200_day_avg_change_pct ->
+                    sorting(v.id, Quote::twoHundredDayAverageChangePercent)
+
                 R.id.tv_52_week_low_change_pct -> sorting(v.id, Quote::fiftyTwoWeekLowChangePercent)
-                R.id.tv_52_week_high_change_pct -> sorting(v.id, Quote::fiftyTwoWeekHighChangePercent)
+                R.id.tv_52_week_high_change_pct ->
+                    sorting(v.id, Quote::fiftyTwoWeekHighChangePercent)
+
                 R.id.tv_avg_volume_10_day -> sorting(v.id, Quote::averageDailyVolume10Day)
                 R.id.tv_avg_volume_3_mo -> sorting(v.id, Quote::averageDailyVolume3Month)
                 R.id.tv_dividend_yield -> sorting(v.id, Quote::annualDividendYield)
-                R.id.tv_rating -> sorting(v.id) { it.averageAnalystRating }
+                R.id.tv_rating -> sorting(v.id, Quote::averageAnalystRating)
             }
         }
     }
 
     private var lastSortId: Int = 0
-    private inline fun <R : Comparable<R>> sorting(id: Int, crossinline selector: (Quote) -> R?) {
+    private fun <R : Comparable<R>> sorting(id: Int, selector: (Quote) -> R?) {
         if (lastSortId != id) {
-            adapter.currentList.sortedBy(selector).let(adapter::submitList)
-            lastSortId = id
+            adapter.currentList.sortedBy(selector).also {
+                lastSortId = id
+                adapter.submitList(it)
+            }
         } else {
-            adapter.currentList.sortedByDescending(selector).let(adapter::submitList)
-            lastSortId = 0
+            adapter.currentList.sortedByDescending(selector).also {
+                lastSortId = 0
+                adapter.submitList(it)
+            }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (adapter.currentList.isEmpty()) {
+            fetch()
+        }
+    }
+
 
     private var attemptingFetch = false
     private var fetchCount = 0
@@ -188,15 +199,11 @@ class HomeFragment : Fragment() {
 
     private fun update() {
         updateHeader()
+        adapter.submitList(viewModel.quotes.value)
         fetchCount = 0
     }
 
     private fun updateHeader() {
 
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

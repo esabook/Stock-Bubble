@@ -26,10 +26,8 @@ import com.stockbubble.dev.component.AppPreference
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle.SHORT
-import java.math.RoundingMode
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import java.util.Currency
 import java.util.Date
 import java.util.Locale
 
@@ -227,14 +225,14 @@ fun Long.formatBigNumbers(context: Context): String {
   }
 }
 
-fun formatNumber(price: Float, currencyCode: String): String {
-  val currencyFormatter = NumberFormat.getCurrencyInstance().apply {
-    currency = Currency.getInstance(currencyCode)
-    maximumFractionDigits = 2
-    roundingMode = RoundingMode.FLOOR
-  }
-  return currencyFormatter.format(price)
-}
+//fun formatNumber(price: Float, currencyCode: String): String {
+//  val currencyFormatter = NumberFormat.getCurrencyInstance().apply {
+//    currency = Currency.getInstance(currencyCode)
+//    maximumFractionDigits = 2
+//    roundingMode = RoundingMode.FLOOR
+//  }
+//  return currencyFormatter.format(price)
+//}
 //
 //fun TickerView.formatChange(change: Float) {
 //  when {

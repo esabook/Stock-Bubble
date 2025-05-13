@@ -19,7 +19,26 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "key0"
+            keyPassword = "Sepasang32"
+            storeFile = file("../stock_bubble.jks")
+            storePassword = "GengZax123!"
+        }
+    }
+
     buildTypes {
+        debug {
+            isDebuggable = true
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
         release {
             isMinifyEnabled = false
             isShrinkResources = false
@@ -27,6 +46,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -55,12 +75,13 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.swiperefreshlayout)
 
+    implementation(libs.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
-    implementation (libs.converter.simplexml)
-    implementation (libs.converter.scalars)
+    implementation(libs.converter.simplexml)
+    implementation(libs.converter.scalars)
 
 
     implementation(libs.androidx.room.runtime)
@@ -77,8 +98,9 @@ dependencies {
     implementation(libs.jsoup)
     implementation(libs.mpandroidchart)
 
+//    implementation(libs.cucker.library)
     debugImplementation(libs.cucker.library)
-    releaseImplementation (libs.cucker.library.no.op)
+    releaseImplementation(libs.cucker.library.no.op)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

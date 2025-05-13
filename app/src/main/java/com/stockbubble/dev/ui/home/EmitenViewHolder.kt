@@ -12,43 +12,37 @@ import com.stockbubble.dev.orZero
 
 class EmitenViewHolder(val binding: ItemQuoteViewHolderBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun setData(item: Quote) {
         binding.run {
-//            tvNumberRankIndicator.text = item.position.toString()
-//            tvNumberRank.text = item.position.toString()
+            //            tvNumberRankIndicator.text = item.position.toString()
+            //            tvNumberRank.text = item.position.toString()
             tvName.text = item.symbol
             tvRegularPrice.text = item.priceString()
             tvRegularMarketCap.text = item.marketCap?.formatBigNumbers(root.context)
             tvRegularMarketVolume.text = item.regularMarketVolume?.formatBigNumbers(root.context)
 
-            tvRegularMarketChange.text = getChangePercentWithSign(item.changeInPercent)
+            tvRegularMarketChange.text = getPercentWithSign(item.changeInPercent)
             tvRegularMarketChange.changeBackground(item.changeInPercent)
 
-            tv50DayChangePct.text =
-                getChangePercentWithSign(item.fiftyDayAverageChangePercent.orZero())
+            tv50DayChangePct.text = getPercentWithSign(item.fiftyDayAverageChangePercent.orZero())
             tv50DayChangePct.changeBackground(item.fiftyDayAverageChangePercent.orZero())
 
             tv200DayAvgChangePct.text =
-                getChangePercentWithSign(item.twoHundredDayAverageChangePercent.orZero())
+                getPercentWithSign(item.twoHundredDayAverageChangePercent.orZero())
             tv200DayAvgChangePct.changeBackground(item.twoHundredDayAverageChangePercent.orZero())
 
             tv52WeekLowChangePct.text =
-                getChangePercentWithSign(item.fiftyTwoWeekLowChangePercent.orZero())
+                getPercentWithSign(item.fiftyTwoWeekLowChangePercent.orZero())
             tv52WeekLowChangePct.changeBackground(item.fiftyTwoWeekLowChangePercent.orZero())
 
             tv52WeekHighChangePct.text =
-                getChangePercentWithSign(item.fiftyTwoWeekHighChangePercent.orZero())
+                getPercentWithSign(item.fiftyTwoWeekHighChangePercent.orZero())
             tv52WeekHighChangePct.changeBackground(item.fiftyTwoWeekHighChangePercent.orZero())
 
-            tvAvgVolume3Mo.text =
-                AppPreference.DECIMAL_FORMAT_2DP.format(item.averageDailyVolume3Month.orZero())
-            tvAvgVolume10Day.text =
-                AppPreference.DECIMAL_FORMAT_2DP.format(item.averageDailyVolume10Day.orZero())
+            tvAvgVolume3Mo.text = item.averageDailyVolume3Month?.formatBigNumbers(root.context)
+            tvAvgVolume10Day.text = item.averageDailyVolume10Day?.formatBigNumbers(root.context)
 
-            tvDividenYield.text =
-                AppPreference.DECIMAL_FORMAT_2DP.format(item.annualDividendYield).plus("%")
-
+            tvDividendYield.text = getPercentWithSign(item.annualDividendYield)
             tvRating.text = item.averageAnalystRating ?: "-"
 
             val color = item.getColorRating()
@@ -58,6 +52,7 @@ class EmitenViewHolder(val binding: ItemQuoteViewHolderBinding) :
     }
 
     companion object {
+
 
         fun Quote.getColorRating(): Int {
             return averageAnalystRating?.first()?.let {
@@ -90,7 +85,7 @@ class EmitenViewHolder(val binding: ItemQuoteViewHolderBinding) :
             setTextColor(ResourcesCompat.getColor(resources, color, null))
         }
 
-        fun getChangePercentWithSign(variable: Float): String {
+        fun getPercentWithSign(variable: Float): String {
             if (variable.isNaN())
                 return "-"
 

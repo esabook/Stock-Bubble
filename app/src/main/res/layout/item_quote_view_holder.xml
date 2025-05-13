@@ -2,8 +2,9 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="1120dp"
+    android:layout_height="@dimen/dp_28"
+    android:gravity="center_vertical"
     android:background="?selectableItemBackground"
     android:orientation="horizontal">
 
@@ -50,29 +51,39 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_number_rank"
         android:layout_width="@dimen/dp_16"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         tools:text="#"
         tools:textAlignment="textEnd" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_name"
-        android:layout_width="@dimen/dp_100"
-        android:layout_height="wrap_content"
-        android:background="@drawable/text_rounded_bg"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        tools:text="Nama" />
+    <FrameLayout
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/dp_1">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_regular_price"
-        android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:textAlignment="textEnd"
-        tools:text="Price" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_rounded_bg"
+            android:paddingHorizontal="@dimen/dp_8"
+            android:gravity="start|center_vertical"
+            android:paddingVertical="@dimen/dp_2"
+            tools:text="Nama" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_regular_price"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:gravity="end|center_vertical"
+            tools:text="Price" />
+
+    </FrameLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_regular_market_cap"
-        android:layout_width="@dimen/dp_120"
+        android:layout_width="@dimen/dp_80"
         android:layout_height="wrap_content"
         android:textAlignment="textEnd"
         tools:text="Market Cap" />
@@ -80,7 +91,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_regular_market_volume"
-        android:layout_width="@dimen/dp_120"
+        android:layout_width="@dimen/dp_80"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/dp_4"
         android:paddingVertical="@dimen/dp_2"
@@ -89,82 +100,79 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_regular_market_change"
-        android:layout_width="@dimen/dp_120"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        android:textAlignment="textEnd"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeMinTextSize="4sp"
         tools:text="0%" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_50_day_change_pct"
-        android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        android:textAlignment="textEnd"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeMinTextSize="4sp"
         tools:text="0%" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_200_day_avg_change_pct"
-        android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        android:textAlignment="textEnd"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeMinTextSize="4sp"
         tools:text="0%" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_52_week_low_change_pct"
-        android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
         android:textAlignment="textEnd"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeMinTextSize="4sp"
         tools:text="0%" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_52_week_high_change_pct"
-        android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
         android:textAlignment="textEnd"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeMinTextSize="4sp"
         tools:text="0%" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_avg_volume_3_mo"
         android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        android:textAlignment="textEnd"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
         tools:text="0" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_avg_volume_10_day"
         android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        android:textAlignment="textEnd"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
         tools:text="0" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_dividen_yield"
+        android:id="@+id/tv_dividend_yield"
         android:layout_width="@dimen/dp_80"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_4"
-        android:paddingVertical="@dimen/dp_2"
-        android:textAlignment="textEnd"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
         tools:text="0%" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_rating"
         android:layout_width="@dimen/dp_180"
-        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent"
         tools:text="Rating" />
 
     <com.google.android.material.imageview.ShapeableImageView
