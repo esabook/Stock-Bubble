@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Stock Bubble</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="ok">OK</string>
+
+    <string name="number_format_thousands">%1$.2fK</string>
+    <string name="number_format_millions">%1$.2fM</string>
+    <string name="number_format_billions">%1$.2fB</string>
+    <string name="number_format_trillions">%1$.2fT</string>
+
+
+    <string name="alert_above_notification_title">%1$s &gt; %2$s at %3$s</string>
+    <string name="alert_below_notification_title">%1$s &lt; %2$s at %3$s</string>
+    <string name="alert_above_notification">%1$s is now above %2$s at %3$s</string>
+    <string name="alert_below_notification">%1$s is now below %2$s at %3$s</string>
+    <string name="notification_summary_title">How did your watch list do today?</string>
+
+    <string name="desc_channel_alerts">Stock alerts</string>
+    <string name="desc_channel_summary">Daily summary</string>
+
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="?selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/dp_16">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+        app:srcCompat="@drawable/logo_idx" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_name"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/dp_10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="@dimen/dp_32"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="IsssDX" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tint="?colorOnSurface"
+        app:srcCompat="@drawable/ic_arrow_right" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

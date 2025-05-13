@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="tag_emiten_url">0</integer>
+    <integer name="tag_emiten_name">1</integer>
+    <integer name="tag_emiten_serialized">2</integer>
+</resources>
